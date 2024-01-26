@@ -2,44 +2,40 @@
 #include "FastLED.h"
 #include "SoftwareSerial.h"
 
-#define NUM_LEDS 50
-#define PIN_DATA 6
-#define PIN_WIFI 7
-#define COLOR_ODER GRB // this doesn't work - a bug in the FastLED library. Left in case they fix it someday
+#include "globals.h"
+#include "lights.h"
 
-#define TWINKLE_SPEED 4
-#define TWINKLE_DENSITY 5
+SoftwareSerial soft_serial(2, 3);
 
-#define STANDARD_HUE 200
-#define OFFSET_HUE 5
+boolean new_data = false;
+const byte num_chars = 32;
+char received_chars[num_chars];
 
-boolean newData = false;
-const byte numChars = 32;
-char receivedChars[numChars];
-
-enum LightMode { plain, candle, christmas };
-LightMode mode = plain;
-
-SoftwareSerial softSerial(2, 3);
+LightMode mode = CHRISTMAS;
 
 CRGB leds[NUM_LEDS];
+CHSV leds_chsv[NUM_LEDS];
+CHSV base_color = CHSV(STANDARD_HUE, 255, 255);
+CRGB base_color_rgb = CRGB(base_color);
+int christmas_counter = 0;
 
 // function declarations
 void recvWithStartEndMarkers();
-CRGB fix(CRGB color);
-
 
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(19200);
-  softSerial.begin(19200);
+  soft_serial.begin(19200);
   Serial.println("Arduino ready - serial.");
-  softSerial.println("Arduino ready - softSerial.");
+  soft_serial.println("Arduino ready - softSerial.");
 
   FastLED.addLeds<WS2811, PIN_DATA, COLOR_ODER>(leds, NUM_LEDS);
   fill_solid(leds, NUM_LEDS, fix(0xFF0000));
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 20);
+  for(int i = 0; i < NUM_LEDS; i++){
+    leds_chsv[i] = CHSV(STANDARD_HUE, 255,255);
+  }
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 60);
   FastLED.setBrightness(255);
   FastLED.show();
   digitalWrite(LED_BUILTIN, HIGH);
@@ -48,15 +44,17 @@ void setup()
 void loop()
 {
   recvWithStartEndMarkers();
-  if (newData == true)
+  if (new_data == true)
   {
-    String data(receivedChars);
+    String data(received_chars);
     Serial.println(data);
 
-    newData = false;
+    new_data = false;
   }
 
+  updateLights();
 }
+
 
 void recvWithStartEndMarkers(){
     static boolean recvInProgress = false;
@@ -65,22 +63,22 @@ void recvWithStartEndMarkers(){
     char endMarker = '>';
     char rc;
  
-    while (softSerial.available() > 0 && newData == false) {
-        rc = softSerial.read();
+    while (soft_serial.available() > 0 && new_data == false) {
+        rc = soft_serial.read();
 
         if (recvInProgress == true) {
             if (rc != endMarker) {
-                receivedChars[ndx] = rc;
+                received_chars[ndx] = rc;
                 ndx++;
-                if (ndx >= numChars) {
-                    ndx = numChars - 1;
+                if (ndx >= num_chars) {
+                    ndx = num_chars - 1;
                 }
             }
             else {
-                receivedChars[ndx] = '\0'; // terminate the string
+                received_chars[ndx] = '\0'; // terminate the string
                 recvInProgress = false;
                 ndx = 0;
-                newData = true;
+                new_data = true;
             }
         }
         else if (rc == startMarker) {
@@ -89,9 +87,3 @@ void recvWithStartEndMarkers(){
     }
 }
 
-CRGB fix(CRGB color){
-  CRGB temp = color;
-  color.red = temp.green;
-  color.green = temp.red;
-  return color;
-}
