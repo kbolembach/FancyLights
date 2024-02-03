@@ -2,21 +2,23 @@
 #include "lights.h"
 
 void updateLights(){
-  switch(mode){
-    case PLAIN:
-      fill_solid(leds, NUM_LEDS, fix(base_color_rgb));
-    break;
-    case CANDLE:
-      candleFlicker();
-    break;
-    case CHRISTMAS:
-        christmasLights(true);
-    break;
-    default:
-      fill_solid(leds, NUM_LEDS, fix(0xFFFFFF));
-      FastLED.setBrightness(255);
-    break;
-  }
+    switch(mode){
+        case PLAIN:
+            fill_solid(leds, NUM_LEDS, fix(base_color_rgb));
+        break;
+        case CANDLE:
+            candleFlicker();
+        break;
+        case CHRISTMAS:
+            christmasLights(true);
+        break;
+        default:
+            fill_solid(leds, NUM_LEDS, fix(0xFFFFFF));
+            FastLED.setBrightness(255);
+        break;
+    }
+  if (leds_enabled) FastLED.setBrightness(brightness);\
+  else FastLED.setBrightness(0);
   FastLED.show();
 }
 
@@ -39,15 +41,15 @@ void christmasLights(bool moving){
 }
 
 void candleFlicker(){
-  bounce();
-  delay(30);
-  fadeOut(7, 2, 10, 0); // feather
-  fadeOut(2, 4, 15, 0); // light
-  fadeOut(3, 10, 500, 40); // strong
-  varyHue();
-  if (random(1,15) == 3){
-    fadeOut(3, 10, 200, 220);
-  }
+    bounce();
+    varyHue();
+    delay(30);
+    fadeOut(7, 2, 10, 0); // feather
+    fadeOut(2, 4, 15, 0); // light
+    fadeOut(3, 10, 500, 40); // strong
+    if (random(1,15) == 3){
+        fadeOut(3, 10, 200, 220);
+    }
 }
 
 void varyHue() {

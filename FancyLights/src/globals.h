@@ -1,5 +1,5 @@
 #pragma once
-#include "SoftwareSerial.h"
+#include "AltSoftSerial.h"
 #include "Arduino.h"
 #include "FastLED.h"
 
@@ -17,16 +17,26 @@ constexpr int OFFSET_HUE = 5;
 constexpr int CHRISTMAS_HUES[4] = { 0, 32, 96, 160 }; // red, orange, green, blue
 extern int christmas_counter;
 
-extern SoftwareSerial soft_serial;
+extern AltSoftSerial soft_serial;
 
 extern boolean new_data;
+extern boolean receiving_from_arduino;
+extern int data_received_length;
+extern int packet_target_length;
+extern int no_retries;
 extern const byte num_chars;
 extern char received_chars[];
 
 enum LightMode { PLAIN, CANDLE, CHRISTMAS };
 extern LightMode mode;
+extern boolean moving_lights;
 
 extern CRGB leds[];
 extern CHSV leds_chsv[];
 extern CHSV base_color;
 extern CRGB base_color_rgb;
+extern boolean leds_enabled;
+extern int brightness;
+
+extern unsigned long last_message_time; 
+extern unsigned long message_delay;
