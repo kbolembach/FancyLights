@@ -18,6 +18,8 @@ constexpr int CHRISTMAS_HUES[4] = { 0, 32, 96, 160 }; // red, orange, green, blu
 extern int christmas_counter;
 
 extern AltSoftSerial soft_serial;
+extern boolean esp_logged_in;
+extern boolean esp_logging_in;
 
 extern boolean new_data;
 extern boolean receiving_from_arduino;

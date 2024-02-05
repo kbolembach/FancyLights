@@ -6,10 +6,44 @@ constexpr char* ERR_VAL = "Error! No value found.";
 void processData(String data){
     String new_color;
     String new_brightness;
-
+    String ssid;
+    String pass;
     data_received_length++;
 
     switch (data[0]){
+        case 'W':
+        if (esp_logged_in || (esp_logging_in && !esp_logged_in)) break;
+        esp_logging_in = true;
+        Serial.println("Input WiFi SSID: ");
+        while (Serial.available() <= 0){}
+        ssid = Serial.readString();
+        soft_serial.println("[S" + ssid + "]");
+        Serial.println("Input WiFi password: ");
+        while (Serial.available() <= 0){}
+        pass = Serial.readString();
+        soft_serial.println("[P" + pass + "]");
+        break;
+
+        case 'V':
+        if (esp_logged_in || (esp_logging_in && !esp_logged_in)) break;
+        esp_logging_in = true;
+        Serial.println("Input WiFi password: ");
+        while (Serial.available() <= 0){}
+        pass = Serial.readString();
+        soft_serial.println("[P" + pass + "]");
+        break;
+
+        case 'L':
+        esp_logging_in = false;
+        if (data[1] == 'S'){
+            esp_logged_in = true;
+        }
+        else if (data[1] == 'F'){
+            esp_logged_in = false;
+        }
+        data_received_length = 0;
+        break;
+
         case 'e':
         receiving_from_arduino = false;
         Serial.println("Data received length: " + String(data_received_length) + ".");

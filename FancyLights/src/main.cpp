@@ -7,6 +7,8 @@
 #include "comm.h"
 
 AltSoftSerial soft_serial; // transmit 9, receive 8
+boolean esp_logged_in = false;
+boolean esp_logging_in = false;
 constexpr unsigned int BAUD_RATE = 19200;
 
 boolean new_data = false;
@@ -52,6 +54,8 @@ void setup()
   FastLED.setBrightness(255);
   FastLED.show();
   digitalWrite(LED_BUILTIN, HIGH);
+
+  delay(3000);
 }
 
 void loop()
