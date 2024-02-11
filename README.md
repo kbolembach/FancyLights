@@ -13,3 +13,11 @@ ___
 4. Connect the WS2811 chain to Arduino - the data pin is 6. Remember that Arduino can't output more than 1A of current through the pins, so for full power use an external power supply.
 5. Plug the Arduino to your PC via USB and run a serial monitor at 19200 BAUD rate. You'll be asked to input your network credentials to log in. You'll receive the server's IP adress.
 Alternatively, you can use the [esp8266.local](esp8266.local) adress if you have [Bonjour](https://developer.apple.com/bonjour/) or another mDNS serivce set up.
+
+___ 
+## TODO
+The project is in its base state now, and will be expanded with the following features:
+- Add Google Home support,
+- Log in to network via softAP instead of serial monitor (and use the hardware serial for communication between the two devices),
+- Make the website prettier,
+- Create a windows application alongside the website.
