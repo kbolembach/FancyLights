@@ -5,7 +5,8 @@ FancyLights is an Arduino project for controlling WS2811 LED strips via the Inte
 
 ![Flowchart](flowchart.png)
 
-___
+This project was created using PlatformIO.
+
 ## Installation
 1. Download [the server](https://github.com/kbolembach/FancyLightsServer) and upload it to the ESP8266.
 2. Download this project and upload it to the Arduino.
@@ -14,7 +15,6 @@ ___
 5. Plug the Arduino to your PC via USB and run a serial monitor at 19200 BAUD rate. You'll be asked to input your network credentials to log in. You'll receive the server's IP adress.
 Alternatively, you can use the [esp8266.local](esp8266.local) adress if you have [Bonjour](https://developer.apple.com/bonjour/) or another mDNS serivce set up.
 
-___ 
 ## TODO
 The project is in its base state now, and will be expanded with the following features:
 - Add Google Home support,
